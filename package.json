@@ -1,0 +1,20 @@
+{
+  "name": "ticketsupport-api",
+  "version": "1.0.0",
+  "description": "API for TicketSupport App",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "Rogier Wiertz",
+  "license": "ISC",
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.9"
+  }
+}
