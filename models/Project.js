@@ -31,6 +31,11 @@ projectSchema.virtual('numTickets', {
   foreignField: 'projectId',
   count: true,
 });
+projectSchema.virtual('developers', {
+  ref: 'User',
+  localField: 'developerIds',
+  foreignField: '_id',
+});
 projectSchema.virtual('numDevelopers').get(function() {
   return this.developerIds.length;
 });

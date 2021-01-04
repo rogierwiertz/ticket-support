@@ -1,18 +1,82 @@
 [
     {
-        "title": "Error on startup",
-        "description": "I get an error when the homepage is loading.",
+        "_id": "5ff35f88e1e15a572012b555",
+        "title": "Page not found",
+        "description": "I get an error when i try to load the homepage.",
         "type": "error",
-        "submitter": "5d725a1b7b292f5f8ceff788",
+        "submitter": "5ff351715612f3578cd4a8f6",
         "image": "no-photo.jpeg",
-        "projectId": "5ff226b5400d990f4cfd9983"            
+        "projectId": "5ff35f8ae1e15a572012b576",
+        "status": "open"
     },
     {
+        "_id": "5ff35f88e1e15a572012b556",
         "title": "Dark mode",
         "description": "It would be nice if the website supports dark mode.",
         "type": "feature request",
-        "submitter": "5c8a1d5b0190b214360dc032",
+        "submitter": "5ff351715612f3578cd4a8f7",
         "image": "no-photo.jpeg",  
-        "projectId": "5ff226b5400d990f4cfd9983"         
+        "projectId": "5ff35f8ae1e15a572012b577",
+        "status": "open"         
+    },
+    {
+        "_id": "5ff35f88e1e15a572012b557",
+        "title": "Images look weird on mobile",
+        "description": "When I view the website on my iPhone, images are not fully visible. I have to turn my screen everytime I want to see an image.",
+        "type": "error",
+        "submitter": "5ff351715612f3578cd4a8f8",
+        "image": "no-photo.jpeg",  
+        "projectId": "5ff35f8ae1e15a572012b575",
+        "status": "closed"         
+    },
+    {
+        "_id": "5ff35f88e1e15a572012b558",
+        "title": "Filtering for 'Get all tickets' doesn't work",
+        "description": "I get an error: resource not found",
+        "type": "error",
+        "submitter": "5ff351715612f3578cd4a8f6",
+        "image": "no-photo.jpeg",
+        "projectId": "5ff35f8ae1e15a572012b576",
+        "status": "open"            
+    },
+    {
+        "_id": "5ff35f88e1e15a572012b559",
+        "title": "Remember login",
+        "description": "It would be nice if the website remembers me when I try to login.",
+        "type": "feature request",
+        "submitter": "5ff351715612f3578cd4a8f8",
+        "image": "no-photo.jpeg",  
+        "projectId": "5ff35f8ae1e15a572012b577",
+        "status": "closed"         
+    },
+    {
+        "_id": "5ff35f88e1e15a572012b560",
+        "title": "Link broken",
+        "description": "When I click on the link 'Dashboard' nothing happens.",
+        "type": "error",
+        "submitter": "5ff351715612f3578cd4a8f7",
+        "image": "no-photo.jpeg",  
+        "projectId": "5ff35f8ae1e15a572012b575",
+        "status": "open"         
+    },
+    {
+        "_id": "5ff35f88e1e15a572012b561",
+        "title": "Change email",
+        "description": "I want to change back to my old email address, but I got the message: email address already exists.",
+        "type": "error",
+        "submitter": "5ff351715612f3578cd4a8f7",
+        "image": "no-photo.jpeg",  
+        "projectId": "5ff35f8ae1e15a572012b578",
+        "status": "closed"         
+    },
+    {
+        "_id": "5ff35f88e1e15a572012b562",
+        "title": "Compliment",
+        "description": "I want to compliment all the developers for this great API.",
+        "type": "feature request",
+        "submitter": "5ff351715612f3578cd4a8f7",
+        "image": "no-photo.jpeg",  
+        "projectId": "5ff35f8ae1e15a572012b579",
+        "status": "closed"         
     }
 ]

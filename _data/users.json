@@ -1,0 +1,82 @@
+[
+  {
+    "_id": "5ff351715612f3578cd4a8f2",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "admin@ticketsupport.com",
+    "password": "123456",
+    "role": "submitter"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f3",
+    "firstName": "Mary",
+    "lastName": "Doe",
+    "email": "submitter@ticketsupport.com",
+    "password": "123456",
+    "role": "submitter"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f4",
+    "firstName": "Jimmy",
+    "lastName": "Doe",
+    "email": "developer@ticketsupport.com",
+    "password": "123456",
+    "role": "developer"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f5",
+    "firstName": "Rick",
+    "lastName": "Doe",
+    "email": "projectmanager@ticketsupport.com",
+    "password": "123456",
+    "role": "project manager"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f9",
+    "firstName": "Davey",
+    "lastName": "Doe",
+    "email": "davey@ticketsupport.com",
+    "password": "123456",
+    "role": "project manager"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f6",
+    "firstName": "Lilly",
+    "lastName": "Doe",
+    "email": "lilly@ticketsupport.com",
+    "password": "123456",
+    "role": "submitter"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f7",
+    "firstName": "Dennis",
+    "lastName": "Doe",
+    "email": "dennis@ticketsupport.com",
+    "password": "123456",
+    "role": "submitter"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8f8",
+    "firstName": "Rick",
+    "lastName": "Doe",
+    "email": "rick@ticketsupport.com",
+    "password": "123456",
+    "role": "submitter"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8a1",
+    "firstName": "Jill",
+    "lastName": "Doe",
+    "email": "jill@ticketsupport.com",
+    "password": "123456",
+    "role": "developer"
+  },
+  {
+    "_id": "5ff351715612f3578cd4a8a2",
+    "firstName": "Ronnie",
+    "lastName": "Doe",
+    "email": "ronnie@ticketsupport.com",
+    "password": "123456",
+    "role": "developer"
+  }
+]

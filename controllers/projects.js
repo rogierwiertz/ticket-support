@@ -13,7 +13,7 @@ exports.getProjects = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/projects/:id
 // @access  Admin, Projectmanager*, Developer*
 exports.getProject = asyncHandler(async (req, res, next) => {
-  const project = await Project.findById(req.params.id);
+  const project = await Project.findById(req.params.id).populate('developers', 'firstName lastName email role');
 
   if (!project) {
     return next(

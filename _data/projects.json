@@ -1,12 +1,37 @@
 [
   {
-    "name": "User project",
-    "description": "Project for creating the user model.",
-    "projectManagerId": "5c8a1d5b0190b214360dc032"
+    "_id": "5ff35f8ae1e15a572012b575",
+    "name": "Frontend problems",
+    "description": "Frontend related errors/ bugs.",
+    "projectManagerId": "5ff351715612f3578cd4a8f9",
+    "developerIds": ["5ff351715612f3578cd4a8a1"]
   },
   {
-    "name": "Second project",
-    "description": "Just another project.",
-    "projectManagerId": "5c8a1d5b0190b214360dc033"
+    "_id": "5ff35f8ae1e15a572012b576",
+    "name": "Backend problems",
+    "description": "Backend related problems / bugs.",
+    "projectManagerId": "5ff351715612f3578cd4a8f5",
+    "developerIds": ["5ff351715612f3578cd4a8a1"]
+  },
+  {
+    "_id": "5ff35f8ae1e15a572012b577",
+    "name": "Feature requests",
+    "description": "Collection of feature requests.",
+    "projectManagerId": "5ff351715612f3578cd4a8f9",
+    "developerIds": ["5ff351715612f3578cd4a8a1", "5ff351715612f3578cd4a8a2"]
+  },
+  {
+    "_id": "5ff35f8ae1e15a572012b578",
+    "name": "Account issues",
+    "description": "All sort of account issues.",
+    "projectManagerId": "5ff351715612f3578cd4a8f5",
+    "developerIds": ["5ff351715612f3578cd4a8a1", "5ff351715612f3578cd4a8a2"]
+  },
+  {
+    "_id": "5ff35f8ae1e15a572012b579",
+    "name": "Miscellaneous",
+    "description": "All other tickets.",
+    "projectManagerId": "5ff351715612f3578cd4a8f9",
+    "developerIds": ["5ff351715612f3578cd4a8a2"]
   }
 ]

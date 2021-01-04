@@ -16,6 +16,7 @@ connectDB();
 // Route files
 const tickets = require('./routes/tickets');
 const projects = require('./routes/projects');
+const users = require('./routes/users');
 
 // Dev loggin middleware
 if (process.env.NODE_ENV === 'development') {
@@ -28,6 +29,7 @@ app.use(express.json());
 // Mount routes
 app.use('/api/v1/tickets', tickets);
 app.use('/api/v1/projects', projects);
+app.use('/api/v1/users', users);
 
 // Error handler
 app.use(errorHandler);
