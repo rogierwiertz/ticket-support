@@ -1,0 +1,18 @@
+[
+    {
+        "title": "Error on startup",
+        "description": "I get an error when the homepage is loading.",
+        "type": "error",
+        "submitter": "5d725a1b7b292f5f8ceff788",
+        "image": "no-photo.jpeg",
+        "projectId": "5ff226b5400d990f4cfd9983"            
+    },
+    {
+        "title": "Dark mode",
+        "description": "It would be nice if the website supports dark mode.",
+        "type": "feature request",
+        "submitter": "5c8a1d5b0190b214360dc032",
+        "image": "no-photo.jpeg",  
+        "projectId": "5ff226b5400d990f4cfd9983"         
+    }
+]

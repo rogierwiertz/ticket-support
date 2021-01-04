@@ -1,0 +1,12 @@
+[
+  {
+    "name": "User project",
+    "description": "Project for creating the user model.",
+    "projectManagerId": "5c8a1d5b0190b214360dc032"
+  },
+  {
+    "name": "Second project",
+    "description": "Just another project.",
+    "projectManagerId": "5c8a1d5b0190b214360dc033"
+  }
+]
