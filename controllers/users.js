@@ -9,7 +9,20 @@ const asyncHandler = require('../middleware/async');
 exports.getUsers = asyncHandler(async (req, res, next) => {
   if (req.params.projectId) {
     const userIds = await User.getUsersForProject(req.params.projectId);
-    const users = await User.find({ _id: {$in: userIds} }).sort({lastName: 1, firstName: 1})
+    
+    if (!userIds) {
+      return next(
+        new ErrorResponse(
+          `Project with ID ${req.params.projectId} not found`,
+          404
+        )
+      );
+    }
+
+    const users = await User.find({ _id: { $in: userIds } }).sort({
+      lastName: 1,
+      firstName: 1,
+    });
 
     return res.status(200).json({
       success: true,
@@ -64,7 +77,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   }
 
   req.body.updatedAt = Date.now();
-
+  
   user = await User.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
