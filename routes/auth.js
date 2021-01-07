@@ -12,10 +12,6 @@ const {protect, authorize} = require('../middleware/auth');
 
 const router = express.Router();
 
-// Re-route into other resource router
-// router.use('/:projectId/tickets', ticketRouter);
-// router.use('/:projectId/users', userRouter);
-
 router.post('/register', register);
 router.post('/login', login);
 router.get('/logout', logout);

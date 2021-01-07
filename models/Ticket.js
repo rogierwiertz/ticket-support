@@ -1,53 +1,60 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ticketSchema = new Schema({
-  title: {
-    type: String,
-    required: [true, 'Please add a title'],
-    trim: true,
-  },
-  description: {
-    type: String,
-    required: [true, 'Please add a description'],
-    minlength: [10, 'Please enter at least 10 charactes'],
-    trim: true,
-  },
-  image: {
-    type: String,
-    default: 'no-photo.jpeg',
-  },
-  type: {
-    type: String,
-    enum: ['error', 'feature request'],
-  },
-  submitter: {
-    type: mongoose.Schema.ObjectId,
-    //   ref toevoegen
-    required: true,
-  },
-  priority: {
-    type: String,
-    enum: {
-      values: ['low', 'medium', 'high'],
-      message: 'Priority is either low, medium or high',
+const ticketSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: [true, 'Please add a title'],
+      trim: true,
     },
+    description: {
+      type: String,
+      required: [true, 'Please add a description'],
+      minlength: [10, 'Please enter at least 10 charactes'],
+      trim: true,
+    },
+    image: {
+      type: String,
+      default: 'no-photo.jpeg',
+    },
+    type: {
+      type: String,
+      enum: ['error', 'feature request'],
+    },
+    submitter: {
+      type: mongoose.Schema.ObjectId,
+      //   ref toevoegen
+      required: true,
+    },
+    priority: {
+      type: String,
+      enum: {
+        values: ['low', 'medium', 'high'],
+        message: 'Priority is either low, medium or high',
+      },
+    },
+    status: {
+      type: String,
+      enum: ['open', 'closed'],
+      default: 'open',
+    },
+    projectId: mongoose.Schema.ObjectId,
+    developerId: {
+      type: mongoose.Schema.ObjectId,
+      default: null,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    updatedAt: Date,
   },
-  status: {
-    type: String,
-    enum: ['open', 'closed'],
-    default: 'open',
-  },
-  projectId: mongoose.Schema.ObjectId,
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  updatedAt: Date,
-}, {
-  toJSON: { virtuals: true},
-  toObject: {virtuals: true}
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 ticketSchema.virtual('project', {
   ref: 'Project',

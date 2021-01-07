@@ -5,10 +5,12 @@ const {
   getProject,
   createProject,
   updateProject,
-  deleteProject
+  deleteProject,
+  getProjectsForUser,
 } = require('../controllers/projects');
 
 const advancedResults = require('../middleware/advancedResults');
+const { protect, authorize } = require('../middleware/auth');
 
 const Project = require('../models/Project');
 
@@ -22,8 +24,26 @@ const router = express.Router();
 router.use('/:projectId/tickets', ticketRouter);
 router.use('/:projectId/users', userRouter);
 
-router.route('/').get(advancedResults(Project, 'numTickets'), getProjects).post(createProject);
-router.route('/:id').get(getProject).put(updateProject).delete(deleteProject);
-
+router
+  .route('/')
+  .get(
+    protect,
+    authorize('admin'),
+    advancedResults(Project, 'numTickets developers projectManager'),
+    getProjects
+  )
+  .post(protect, authorize('admin'), createProject);
+router
+  .route('/myprojects')
+  .get(
+    protect,
+    authorize('admin', 'project manager', 'developer'),
+    getProjectsForUser
+  );
+router
+  .route('/:id')
+  .get(protect, authorize('admin', 'project manager', 'developer'), getProject)
+  .put(protect, authorize('admin', 'project manager'), updateProject)
+  .delete(protect, authorize('admin'), deleteProject);
 
 module.exports = router;

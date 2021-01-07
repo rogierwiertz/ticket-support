@@ -5,24 +5,41 @@ const {
   getTicket,
   createTicket,
   updateTicket,
-  deleteTicket
+  deleteTicket,
+  getTicketsForUser,
 } = require('../controllers/tickets');
 
 const advancedResults = require('../middleware/advancedResults');
 const Ticket = require('../models/Ticket');
 
-const {protect, authorize} = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
-const router = express.Router({mergeParams: true});
+const router = express.Router({ mergeParams: true });
 
-router.route('/').get(protect, advancedResults(Ticket, {
-  path: 'project',
-  
-  populate: {
-    path: 'numTickets',    
-  }
-}), getTickets).post(protect, createTicket);
-
-router.route('/:id').get(getTicket).put(updateTicket).delete(deleteTicket);
+router
+  .route('/')
+  .get(
+    protect,
+    authorize('admin', 'project manager'),
+    advancedResults(Ticket, {
+      path: 'project',
+      select: 'name description developerIds',
+      populate: {
+        path: 'numTickets',
+      },
+    }),
+    getTickets
+  )
+  .post(protect, authorize('admin', 'submitter'), createTicket);
+router.get('/mytickets', protect, getTicketsForUser);
+router
+  .route('/:id')
+  .get(protect, getTicket)
+  .put(
+    protect,
+    authorize('admin', 'project manager', 'developer'),
+    updateTicket
+  )
+  .delete(protect, authorize('admin'), deleteTicket);
 
 module.exports = router;

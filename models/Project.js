@@ -36,6 +36,11 @@ projectSchema.virtual('developers', {
   localField: 'developerIds',
   foreignField: '_id',
 });
+projectSchema.virtual('projectManager', {
+  ref: 'User',
+  localField: 'projectManagerId',
+  foreignField: '_id',
+});
 projectSchema.virtual('numDevelopers').get(function() {
   return this.developerIds.length;
 });

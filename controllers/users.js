@@ -1,15 +1,33 @@
 const User = require('../models/User');
+const Project = require('../models/Project');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 
 // #desc    Get all users
 // @route   GET /api/v1/users
 // @route   GET /api/v1/projects/:projectId/users
-// @access  Admin, Projectmanager*
+// @access  Admin
 exports.getUsers = asyncHandler(async (req, res, next) => {
   if (req.params.projectId) {
+    // if user is project manager, check if he is associated with requested project
+    if (req.user.role === 'project manager') {
+      const project = await Project.findOne({
+        _id: req.params.projectId,
+        projectManagerId: req.user._id,
+      });
+
+      if (!project) {
+        return next(
+          new ErrorResponse(
+            `User is not associated with a project with ID of ${req.params.projectId}`,
+            404
+          )
+        );
+      }
+    }
+
     const userIds = await User.getUsersForProject(req.params.projectId);
-    
+
     if (!userIds) {
       return next(
         new ErrorResponse(
@@ -31,6 +49,16 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     });
   }
 
+  // Get all users is only available for admins
+  if (req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `User with role ${req.user.role} is not allowed to access this route`,
+        403
+      )
+    );
+  }
+
   res.status(200).json(res.advancedResults);
 });
 
@@ -38,7 +66,27 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/users/:id
 // @access  Admin, Projectmanager*,
 exports.getUser = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  // For project managers, check if they are associated with the requested user  
+  if (req.user.role === 'project manager') {
+    const userProjects = await Project.find({projectManagerId: req.user._id});
+    const userDeveloperIds = [];
+    userProjects.map((project) => {
+      project.developerIds.forEach( id => {
+        userDeveloperIds.push(id);
+      })
+    });
+    
+  const isAssociated = userDeveloperIds.find((id) => {
+      return id.toString() === req.params.id.toString();
+    });
+    
+    if(!isAssociated) {
+      return next(new ErrorResponse(`Not allowed to get user with ID ${req.params.id}`, 403));
+    }
+  }
+
+
+  const user = await User.findById(filter);
 
   if (!user) {
     return next(
@@ -77,7 +125,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   }
 
   req.body.updatedAt = Date.now();
-  
+
   user = await User.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
