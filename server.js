@@ -19,6 +19,7 @@ const tickets = require('./routes/tickets');
 const projects = require('./routes/projects');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const comments = require('./routes/comments');
 
 // Dev loggin middleware
 if (process.env.NODE_ENV === 'development') {
@@ -36,6 +37,7 @@ app.use('/api/v1/tickets', tickets);
 app.use('/api/v1/projects', projects);
 app.use('/api/v1/users', users);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/comments', comments);
 
 // Error handler
 app.use(errorHandler);

@@ -14,7 +14,14 @@ const Ticket = require('../models/Ticket');
 
 const { protect, authorize } = require('../middleware/auth');
 
+// Include other resources router
+const commentRouter = require('./comments');
+
 const router = express.Router({ mergeParams: true });
+
+// Re-route into other resource router
+router.use('/:ticketId/comments', commentRouter);
+
 
 router
   .route('/')

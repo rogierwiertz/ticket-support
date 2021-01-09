@@ -46,7 +46,7 @@ exports.getTickets = asyncHandler(async (req, res, next) => {
 
 // #desc    Get single ticket
 // @route   GET /api/v1/tickets/:id
-// @access  Admin, Projectmanager*, Developer*
+// @access  Admin, Projectmanager*, Developer*, Submitter*
 exports.getTicket = asyncHandler(async (req, res, next) => {
   // Query filter depending on user role
   const filter = {
