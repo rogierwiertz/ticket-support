@@ -28,13 +28,7 @@ router
   .get(
     protect,
     authorize('admin', 'project manager'),
-    advancedResults(Ticket, {
-      path: 'project',
-      select: 'name description developerIds',
-      populate: {
-        path: 'numTickets',
-      },
-    }),
+    advancedResults(Ticket, 'numComments'),
     getTickets
   )
   .post(protect, authorize('admin', 'submitter'), createTicket);

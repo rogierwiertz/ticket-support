@@ -63,4 +63,18 @@ ticketSchema.virtual('project', {
   justOne: true,
 });
 
+ticketSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'ticketId',
+  justOne: false,
+});
+
+ticketSchema.virtual('numComments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'ticketId',
+  count: true,
+})
+
 module.exports = mongoose.model('Ticket', ticketSchema);

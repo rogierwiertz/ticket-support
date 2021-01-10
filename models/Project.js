@@ -42,7 +42,9 @@ projectSchema.virtual('projectManager', {
   foreignField: '_id',
 });
 projectSchema.virtual('numDevelopers').get(function() {
-  return this.developerIds.length;
+  if (this.developerIds) {
+    return this.developerIds.length;
+  }
 });
 
 module.exports = mongoose.model('Project', projectSchema);

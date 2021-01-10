@@ -167,6 +167,7 @@ exports.updateComment = asyncHandler(async (req, res, next) => {
       }
     }
   }
+  fieldsToUpdate.updatedAt = Date.now();
 
   const comment = await Comment.findOneAndUpdate(filter, fieldsToUpdate, {
     new: true,

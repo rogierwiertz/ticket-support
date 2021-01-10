@@ -29,7 +29,7 @@ router
   .get(
     protect,
     authorize('admin'),
-    advancedResults(Project, 'numTickets developers projectManager'),
+    advancedResults(Project, 'numTickets'),
     getProjects
   )
   .post(protect, authorize('admin'), createProject);

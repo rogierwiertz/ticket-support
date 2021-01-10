@@ -25,7 +25,7 @@ exports.getTickets = asyncHandler(async (req, res, next) => {
       filter.projectId = project._id;
     }
     
-    const tickets = await Ticket.find(filter);
+    const tickets = await Ticket.find(filter).populate('numComments');
 
     return res.status(200).json({
       success: true,
@@ -62,7 +62,24 @@ exports.getTicket = asyncHandler(async (req, res, next) => {
     filter.projectId = { $in: userProjectIds };
   }
 
-  const ticket = await Ticket.findOne(filter);
+  const ticket = await Ticket.findOne(filter).populate([{
+    path: 'comments',
+    select: 'title content visibility authorId',
+    populate: {
+      path: 'author',
+      select: 'firstName lastName role'
+    }
+  }, {
+    path: 'project',
+    select: 'name description developerIds projectManagerId',
+    populate: [{
+      path: 'developers',
+      select: 'firstName lastName'
+    }, {
+      path: 'projectManager',
+      select: 'firstName lastName'
+    }]
+  }]);
 
   if (!ticket && req.user.role !== 'admin') {
     return next(
@@ -107,10 +124,7 @@ exports.getTicketsForUser = asyncHandler(async (req, res, next) => {
   } else {
     query = query.populate({
       path: 'project',
-      select: 'name description developerIds',
-      populate: {
-        path: 'numTickets',
-      },
+      select: 'name description',      
     });
   }
 

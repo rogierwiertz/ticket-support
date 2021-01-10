@@ -74,11 +74,9 @@ exports.getProjectsForUser = asyncHandler(async (req, res, next) => {
   }
 
   // Building up query
-  let query = Project.find(filter);
+  let query = Project.find(filter).populate('numTickets');
 
-  if (req.user.role === 'project manager') {
-    query = query.populate('developers', 'firstName lastName email').populate('numTickets');
-  } else if (req.user.role === 'developer') {
+  if (req.user.role !== 'project manager') {
     query = query.populate('projectManager', 'firstName lastName email');
   }
 
