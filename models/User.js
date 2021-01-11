@@ -89,4 +89,16 @@ userSchema.statics.getUsersForProject = async function (projectId) {
   return project.developerIds;
 };
 
+userSchema.pre('remove', async function(next) {
+  if (this.role === 'developer') {
+    await this.model('Ticket').updateMany({developerId: this._id}, {developerId: null});
+    await this.model('Project').updateMany({developerIds: {$in: this._id}}, {$pull: {developerIds: this._id}});
+  } else if (this.role === 'project manager') {
+    await this.model('Project').updateMany({projectManagerId: this._id}, {projectManagerId: null});
+  } else  if (this.role === 'submitter') {
+    await this.model('Ticket').updateMany({submitter: this._id}, {submitter: null});
+  }
+  next();
+})
+
 module.exports = mongoose.model('User', userSchema);

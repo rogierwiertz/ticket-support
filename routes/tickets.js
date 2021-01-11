@@ -7,6 +7,8 @@ const {
   updateTicket,
   deleteTicket,
   getTicketsForUser,
+  uploadImage,
+  deleteImage
 } = require('../controllers/tickets');
 
 const advancedResults = require('../middleware/advancedResults');
@@ -22,7 +24,6 @@ const router = express.Router({ mergeParams: true });
 // Re-route into other resource router
 router.use('/:ticketId/comments', commentRouter);
 
-
 router
   .route('/')
   .get(
@@ -31,7 +32,8 @@ router
     advancedResults(Ticket, 'numComments'),
     getTickets
   )
-  .post(protect, authorize('admin', 'submitter'), createTicket);
+  .post(protect, authorize('admin', 'submitter'), createTicket)
+  
 router.get('/mytickets', protect, getTicketsForUser);
 router
   .route('/:id')
@@ -42,5 +44,6 @@ router
     updateTicket
   )
   .delete(protect, authorize('admin'), deleteTicket);
+router.route('/:id/image').post(protect, authorize('admin', 'submitter'), uploadImage).delete(protect, authorize('admin', 'submitter'), deleteImage);
 
 module.exports = router;

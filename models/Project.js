@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 const projectSchema = new Schema({
   name: {
     type: String,
@@ -46,5 +47,10 @@ projectSchema.virtual('numDevelopers').get(function() {
     return this.developerIds.length;
   }
 });
+
+projectSchema.pre('remove', async function(next) {
+  await this.model('Ticket').updateMany({projectId: this._id}, {projectId: null});
+  next();
+})
 
 module.exports = mongoose.model('Project', projectSchema);

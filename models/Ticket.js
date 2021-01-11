@@ -1,5 +1,8 @@
+const fs = require('fs');
+const path = require('path');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
 
 const ticketSchema = new Schema(
   {
@@ -24,7 +27,6 @@ const ticketSchema = new Schema(
     },
     submitter: {
       type: mongoose.Schema.ObjectId,
-      //   ref toevoegen
       required: true,
     },
     priority: {
@@ -75,6 +77,24 @@ ticketSchema.virtual('numComments', {
   localField: '_id',
   foreignField: 'ticketId',
   count: true,
+});
+
+ticketSchema.pre('remove', async function(next) {
+  console.log('called');
+  // Delete ticket image if there is one
+  const image = this.image;
+  if (image !== 'no-photo.jpeg') {
+    fs.unlink(path.join(process.cwd(), 'uploads', image), (err) => {
+      if (err) {
+        console.log(err)
+      }
+    });
+  }
+
+  // Remove comments for ticket
+  await this.model('Comment').deleteMany({ticketId: this._id});
+
+  next();
 })
 
 module.exports = mongoose.model('Ticket', ticketSchema);

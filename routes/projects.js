@@ -43,7 +43,7 @@ router
 router
   .route('/:id')
   .get(protect, authorize('admin', 'project manager', 'developer'), getProject)
-  .put(protect, authorize('admin', 'project manager'), updateProject)
+  .put(protect, authorize('admin'), updateProject)
   .delete(protect, authorize('admin'), deleteProject);
 
 module.exports = router;

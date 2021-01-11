@@ -1,8 +1,11 @@
+const path = require('path');
+const fs = require('fs');
 const Ticket = require('../models/Ticket');
 const Project = require('../models/Project');
 const mongoose = require('mongoose');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
+const { deleteMany } = require('../models/Ticket');
 
 // #desc    Get all tickets
 // @route   GET /api/v1/tickets
@@ -18,13 +21,15 @@ exports.getTickets = asyncHandler(async (req, res, next) => {
         _id: req.params.projectId,
         projectManagerId: req.user._id,
       });
-      
+
       if (!project) {
-        return next(new ErrorResponse(`User is not allowed to get project details`, 403));
+        return next(
+          new ErrorResponse(`User is not allowed to get project details`, 403)
+        );
       }
       filter.projectId = project._id;
     }
-    
+
     const tickets = await Ticket.find(filter).populate('numComments');
 
     return res.status(200).json({
@@ -62,24 +67,30 @@ exports.getTicket = asyncHandler(async (req, res, next) => {
     filter.projectId = { $in: userProjectIds };
   }
 
-  const ticket = await Ticket.findOne(filter).populate([{
-    path: 'comments',
-    select: 'title content visibility authorId',
-    populate: {
-      path: 'author',
-      select: 'firstName lastName role'
-    }
-  }, {
-    path: 'project',
-    select: 'name description developerIds projectManagerId',
-    populate: [{
-      path: 'developers',
-      select: 'firstName lastName'
-    }, {
-      path: 'projectManager',
-      select: 'firstName lastName'
-    }]
-  }]);
+  const ticket = await Ticket.findOne(filter).populate([
+    {
+      path: 'comments',
+      select: 'title content visibility authorId',
+      populate: {
+        path: 'author',
+        select: 'firstName lastName role',
+      },
+    },
+    {
+      path: 'project',
+      select: 'name description developerIds projectManagerId',
+      populate: [
+        {
+          path: 'developers',
+          select: 'firstName lastName',
+        },
+        {
+          path: 'projectManager',
+          select: 'firstName lastName',
+        },
+      ],
+    },
+  ]);
 
   if (!ticket && req.user.role !== 'admin') {
     return next(
@@ -124,7 +135,7 @@ exports.getTicketsForUser = asyncHandler(async (req, res, next) => {
   } else {
     query = query.populate({
       path: 'project',
-      select: 'name description',      
+      select: 'name description',
     });
   }
 
@@ -195,7 +206,15 @@ exports.updateTicket = asyncHandler(async (req, res, next) => {
     fieldsToUpdate = req.body;
   }
   if (req.user.role === 'project manager') {
-    const { type } = req.body;
+    const { type, developerId } = req.body;
+    if (developerId) {
+      // Check if developer is assigned to project
+      const project = await Project.findById(ticket.projectId);
+      if (!project.developerIds.includes(developerId)) {
+        return next(new ErrorResponse(`Not allowed to assign developer with ID ${developerId}`, 403));
+      }
+      fieldsToUpdate.developerId = developerId;
+    }
     if (type) {
       fieldsToUpdate.type = type;
     }
@@ -222,7 +241,7 @@ exports.updateTicket = asyncHandler(async (req, res, next) => {
 
 // #desc    Delete a ticket
 // @route   DELETE /api/v1/tickets/:id
-// @access  Admin, Projectmanager*
+// @access  Admin
 exports.deleteTicket = asyncHandler(async (req, res, next) => {
   let ticket = await Ticket.findById(req.params.id);
 
@@ -232,10 +251,106 @@ exports.deleteTicket = asyncHandler(async (req, res, next) => {
     );
   }
 
-  await Ticket.findByIdAndDelete(req.params.id);
+  await ticket.remove();
 
   res.status(200).json({
     success: true,
     data: {},
+  });
+});
+
+// #desc    Upload an image
+// @route   POST /api/v1/tickets/:id/image
+// @access  Admin, Submitter*
+exports.uploadImage = asyncHandler(async (req, res, next) => {
+  const filter = { _id: req.params.id };
+  if (req.user.role !== 'admin') {
+    filter.submitter = req.user._id;
+  }
+  let ticket = await Ticket.findOne(filter);
+
+  if (!ticket) {
+    return next(
+      new ErrorResponse(`Ticket with ID ${req.params.id} not found`, 404)
+    );
+  }
+
+  // Check if files were uploaded
+  if (!req.files || Object.keys(req.files).length === 0 || !req.files.image) {
+    return next(new ErrorResponse(`No files were uploaded`, 400));
+  }
+
+  // Get old image for ticket
+  const oldImage = ticket.image;
+
+  // Check if uploaded file is an image
+  const image = req.files.image;
+  if (!image.mimetype.startsWith('image/')) {
+    return next(new ErrorResponse(`File is not an image`, 400));
+  }
+  const ext = image.mimetype.split('/')[1];
+  const imageName = `ticket-${req.params.id}.${ext}`;
+
+  // Move file to folder
+  image.mv(path.join(process.cwd(), 'uploads', imageName), (err) => {
+    if (err) {
+      console.log(err);
+      return next(
+        new ErrorResponse(`There was an error uploading the file`, 500)
+      );
+    }
+    // Delete old image file
+    if (imageName !== oldImage && oldImage !== 'no-photo.jpeg') {
+      fs.unlink(path.join(process.cwd(), 'uploads', oldImage), (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  });
+
+  ticket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    { image: imageName },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: ticket,
+  });
+});
+
+// #desc    Delete an image for a specific ticket
+// @route   DELETE /api/v1/tickets/:id/image
+// @access  Admin, Submitter*
+exports.deleteImage = asyncHandler(async (req, res, next) => {
+  const filter = { _id: req.params.id };
+  if (req.user.role !== 'admin') {
+    filter.submitter = req.user._id;
+  }
+  let ticket = await Ticket.findOne(filter);
+
+  if (!ticket) {
+    return next(
+      new ErrorResponse(`Ticket with ID ${req.params.id} not found`, 404)
+    );
+  }
+
+  ticket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    { image: 'no-photo.jpeg' },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: ticket,
   });
 });

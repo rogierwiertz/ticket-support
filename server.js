@@ -1,8 +1,10 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -20,6 +22,7 @@ const projects = require('./routes/projects');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const comments = require('./routes/comments');
+const ErrorResponse = require('./utils/errorResponse');
 
 // Dev loggin middleware
 if (process.env.NODE_ENV === 'development') {
@@ -31,6 +34,24 @@ app.use(express.json());
 
 // Parse cookies
 app.use(cookieParser());
+
+// File upload
+app.use(
+  fileUpload({
+    limits: {
+      fileSize: 2 * 1000 * 1000,
+    },
+    createParentPath: true,
+    abortOnLimit: true,
+    limitHandler: (req, res, next) => {
+      return next(new ErrorResponse('Filesize must be under 2 mb', 413));
+    },
+    // debug: true,
+  })
+);
+
+// Set static folder
+app.use('/static', express.static(path.join(__dirname, 'uploads')));
 
 // Mount routes
 app.use('/api/v1/tickets', tickets);

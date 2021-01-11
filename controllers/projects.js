@@ -104,46 +104,19 @@ exports.createProject = asyncHandler(async (req, res, next) => {
 
 // #desc    Update a project
 // @route   PUT /api/v1/tickets/:id
-// @access  Admin, Projectmanager*
+// @access  Admin
 exports.updateProject = asyncHandler(async (req, res, next) => {
-  const filter = {
-    _id: req.params.id
-  };
+  
+  const project = await Project.findById(req.params.id);
 
-  if (req.user.role === 'project manager') {
-    filter.projectManagerId = req.user._id;
-  }
-  let project = await Project.findOne(filter);
-
-  if (!project && req.user.role !== 'admin') {
-    return next(
-      new ErrorResponse(
-        `Not allowed to update project with ID ${req.params.id}`,
-        403
-      )
-    );
-  }
-  else if (!project) {
+  if (!project) {
     return next(
       new ErrorResponse(`Project with ID ${req.params.id} not found`, 404)
     );
   }
 
-  let fieldsToUpdate = {};  
-  
-  //   Admin can change everything
-  if (req.user.role === 'admin') {
-    fieldsToUpdate = req.body;
-  }
-  //   Projectmanager can add developers to project
-  else {
-    const {developerIds} = req.body;
-    if (!developerIds) {
-      return next(new ErrorResponse('Please provide developer ID\'s', 403));
-    }
-    fieldsToUpdate.developerIds = developerIds;
-  }
-
+  const fieldsToUpdate = req.body;  
+      
   fieldsToUpdate.updatedAt = Date.now();
 
   project = await Project.findByIdAndUpdate(req.params.id, fieldsToUpdate, {
@@ -169,7 +142,7 @@ exports.deleteProject = asyncHandler(async (req, res, next) => {
     );
   }
 
-  await Project.findByIdAndDelete(req.params.id);
+  await project.remove();
 
   res.status(200).json({
     success: true,
