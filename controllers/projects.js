@@ -107,7 +107,7 @@ exports.createProject = asyncHandler(async (req, res, next) => {
 // @access  Admin
 exports.updateProject = asyncHandler(async (req, res, next) => {
   
-  const project = await Project.findById(req.params.id);
+  let project = await Project.findById(req.params.id);
 
   if (!project) {
     return next(

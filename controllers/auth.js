@@ -15,6 +15,8 @@ exports.register = asyncHandler(async (req, res, next) => {
     password,
   });
 
+  console.log(user);
+
   sendTokenResponse(user, 200, res);
 });
 
@@ -118,6 +120,10 @@ const sendTokenResponse = (user, statusCode, res) => {
 
   res.status(statusCode).cookie('token', token, options).json({
     success: true,
+    user: {
+      _id: user._id,
+      role: user.role,
+    },
     token,
   });
 };
